@@ -1,23 +1,24 @@
-import { Node } from "./node";
+import { Node } from "./node.js";
 
 export class LinkedList {
   constructor() {
-    this.head = new Node();
+    this.head;
+  }
+
+  prepend(value) {
+    this.head = new Node(value, this.head);
   }
 
   append(value) {
-    if (this.head == null) prepend(value);
+    if (!this.head) this.prepend(value);
     else {
       let tmp = this.head;
       while (tmp.nextNode != null) {
         tmp = tmp.nextNode;
       }
-      tmp.nextNode = new Node(value, null);
+      const newNode = new Node(value, null);
+      tmp.nextNode = newNode;
     }
-  }
-
-  prepend(value) {
-    this.head = new Node(value, this.head);
   }
 
   size() {
@@ -94,7 +95,11 @@ export class LinkedList {
       count = 0;
     while (curNode != null) {
       if (count == index) {
-        prevNode.nextNode = new Node(value, curNode);
+        if (index == 0) {
+          this.prepend(value);
+        } else {
+          prevNode.nextNode = new Node(value, curNode);
+        }
       }
       count += 1;
       prevNode = curNode;
@@ -108,12 +113,27 @@ export class LinkedList {
       count = 0;
     while (curNode != null) {
       if (count == index) {
-        prevNode.nextNode = curNode.nextNode;
+        if (index == 0) {
+          this.head = curNode.nextNode;
+        } else {
+          prevNode.nextNode = curNode.nextNode;
+        }
         break;
       }
       count += 1;
       prevNode = curNode;
       curNode = curNode.nextNode;
     }
+  }
+
+  toString() {
+    let finalString = "",
+      tmp = this.head;
+    while (tmp != null) {
+      finalString += ` ( ${tmp.value} ) ->`;
+      tmp = tmp.nextNode;
+    }
+    finalString += ` ${tmp} `;
+    return finalString;
   }
 }
